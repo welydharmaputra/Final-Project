@@ -1,0 +1,603 @@
+# Final-Project
+
+----------------------------------------------main.cpp-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <string>
+#include "time.h"
+#include "LinkedList.h"
+#include "user.h"
+
+using namespace std;
+
+
+int main(){
+    Hash hash;
+    Money money;
+    Time time;
+
+
+
+    while(true) {
+        int choice;
+        cout << "Welcome to MoneyManager" << endl;
+        cout << "1. Login" << endl
+             << "2. Register" << endl
+             << "3. Exit" << endl                                   //the option
+             << "Enter Choice : ";
+        cin >> choice;
+        if(choice == 1){
+            string username , password;
+            cout << "Enter Username : ";
+            cin >> username;
+            cout << "Enter Password : ";
+            cin >> password;
+            if(hash.findUser(username , password)){
+                hash.username = username;
+                money.catAmount[0] = 0;
+                money.catAmount[1] = 0;                             //array for divides to many categories
+                money.catAmount[2] = 0;
+                money.catAmount[3] = 0;
+                money.catAmount[4] = 0;
+                while(true){
+                    cout<<"Welcome to MoneyManager"<<endl
+                        <<"1. Income"<<endl
+                        <<"2. Expense"<<endl                        //Options
+                        <<"3. History"<<endl
+                        <<"4. Clear History"<<endl
+                        <<"5. Logout"<<endl
+                        <<endl<<"Enter Choice:";
+                    int choice;
+                    cin>>choice;                                                                //TO run the functions
+                    if(choice==1){
+                        cout<<"Insert Money : $ ";
+                        int m;
+                        cin>>m;
+                        string dateString = time.showtime();
+                        money.income(m,dateString , "Income" , hash.username);
+                        cin.ignore();
+                        cout<<"\nPress enter to continue..."<<endl;
+                        cin.get();
+
+                    }
+                    else if(choice==2){
+                        cout<<"Insert Money : $ ";
+                        int m;
+                        cin>>m;
+                        if(money.getBalance(hash.username) < m){
+                            cout<<"\nYour Balance Is Not Enough!"<<endl;
+
+                        }
+                        else{
+                            string dateString = time.showtime();
+                            while(true){
+                                int catChoice;
+                                cout << "\nChoose Category" << endl
+                                     << "1. Food" << endl
+                                     << "2. Transportation" << endl
+                                     << "3. Lifestyle" << endl
+                                     << "4. Household" << endl
+                                     << "5. Others" << endl
+                                     << "Enter Choice : ";
+                                cin >> catChoice;
+                                if(catChoice == 1){                                                     //To insert to the history to categories
+                                    money.Expense(m , dateString , "Food" , hash.username);
+
+                                    break;
+                                }
+                                else if(catChoice == 2){
+                                    money.Expense(m , dateString , "Transportation" , hash.username);
+
+                                    break;
+
+                                }
+                                else if(catChoice == 3){
+
+                                    money.Expense(m , dateString , "Lifestyle" , hash.username);
+
+                                    break;
+
+                                }
+                                else if(catChoice == 4){
+
+                                    money.Expense(m , dateString , "Household" ,hash.username);
+
+                                    break;
+
+                                }
+                                else if(catChoice == 5){
+
+                                    money.Expense(m , dateString , "Others" ,hash.username);
+
+                                    break;
+
+                                }
+                                else{
+                                    cout << "Wrong Input !" << endl;
+                                }
+                            }
+                        }
+
+
+
+
+                        cin.ignore();
+                        cout<<"\nPress enter to continue..."<<endl;
+                        cin.get();
+
+                    }
+                    else if(choice==3){
+
+                        money.view(hash.username);
+                        cin.ignore();
+                        cout<<"\nPress enter to continue..."<<endl;                                 // To show The history
+                        cin.get();
+                    }
+
+                    else if(choice==4){
+
+                        money.clearHistory();
+
+                        cin.ignore();                                                               // To clear the history
+                        cout<<"\nPress enter to continue..."<<endl;
+                        cin.get();
+                    }
+
+                    else if(choice==5){
+                        cout<<"\nThankYou For Using This Program! :) \n"<<endl;
+                        break;
+                    }                                                                               // to Logout
+                    else{
+                        cout<<"\nWrong Input !"<<endl;
+                        cin.ignore();
+                        cout<<"\nPress enter to continue..."<<endl;
+                        cin.get();
+                    }
+
+
+                }
+            }
+            else{
+                cout << "Either username or password is incorrect !" << endl;
+
+            }
+
+
+
+        }
+        else if(choice == 2){
+            string username , password;
+            cout << "Enter Username : ";
+            cin >> username;
+            cout << "Enter Password : ";
+            cin >> password;
+            hash.addUser(username , password );
+        }
+        else if(choice == 3){
+            return 0;
+        }
+        else{
+            cout<<"\nWrong Input !"<<endl;
+            cin.ignore();
+            cout<<"\nPress enter to continue..."<<endl;
+            cin.get();
+        }
+    }
+
+
+}
+
+---------------------------------------------------------------time.h------------------------------------------------------------------
+
+
+#include<iostream>
+#include<cstdlib>
+#include<string>
+#include <ctime>
+
+using namespace std;
+
+#ifndef CPPFINAL_TIME_H
+#define CPPFINAL_TIME_H
+
+class Time{
+
+    time_t now = time(0);
+
+
+    tm *ltm = localtime(&now);
+public:
+
+
+    string showtime(){
+        string str = to_string(1 + ltm->tm_mon);
+        string day = to_string(ltm->tm_mday);                                           //To setting the time so we can check the history
+        string year = to_string(1900 + ltm->tm_year);
+        return str + "/" + day + "/" + year ;
+    }
+};
+#endif //CPPFINAL_TIME_H
+
+
+------------------------------------------------------------linkedList.h--------------------------------------------------------------
+
+
+#include<iostream>
+#include<string.h>
+#include<string>
+#include<cstdlib>
+#include <stdio.h>
+#include <time.h>
+#include <iomanip>
+
+using namespace std;
+
+#ifndef MENCOBAFINAL_LINKEDLIST_H
+#define MENCOBAFINAL_LINKEDLIST_H
+
+class Money{
+
+    struct node{
+        node *next;
+        node *prev;
+        int income;
+        int balance;
+        int expense;
+        string category;
+        string date;
+        string username;
+
+    };
+
+public:
+    node * head=NULL;
+    node * tail=NULL;
+
+
+    int catAmount [5] ={0,0 ,0 ,0,0};
+
+    int getBalance(string username){                                            //to check the owner of the balance
+        int balance = 0;
+        node * temp = head;
+        while(temp!=NULL){
+            if(temp->username == username){
+                balance = temp->balance;
+            }
+            temp = temp->next;
+        }
+        return balance;
+    }
+
+    void income(int income,string date , string cat , string username){
+        node *temp= new (node);
+
+
+        if(head == NULL)
+        {
+            temp->balance = income;
+            temp->income = income;                                              // to save the amount of money and others data
+            temp->date = date;
+            temp->category = cat;
+            temp->username = username;
+            temp->next = NULL;
+            temp->prev = NULL;
+            tail = temp;
+            head = temp;
+
+        }
+        else{
+            temp->balance = getBalance(username) + income;
+
+
+            temp->income = income;
+            temp->date = date;
+            temp->category = cat;
+            temp->username = username;
+            temp->next = NULL;
+            temp->prev = tail;
+            tail->next = temp;
+            tail = temp;
+        }
+    }
+    void Expense(int expense , string date , string cat , string username){
+        if(head== NULL){
+            cout<<"Your Balance Is Empty!" << endl;
+        }
+
+
+        else{
+
+            node *temp= new(node);
+            if(head == NULL){
+                cout<<"\nYour Balance Is Empty!" << endl;                               // to expense the user money and input the data to history
+            }
+            else{
+
+                temp->expense = expense;
+                temp->income = 0;
+                temp->balance  = getBalance(username) - expense ;
+                temp->date = date;
+                temp->category = cat;
+                temp->username = username;
+
+                temp->next = NULL;
+                temp->prev = tail;
+                tail->next = temp;
+                tail = temp;
+                cout<<"\nExpense Success"<<endl;
+            }
+
+
+
+        }
+    }
+
+    void clearHistory(){
+
+
+        catAmount[0]=0;
+        catAmount[1]=0;
+        catAmount[2]=0;
+        catAmount[3]=0;
+        catAmount[4]=0;
+
+        while(head ->next!=NULL){
+            node *temp= head;
+            head = temp;                                                // To clear the history
+            head = temp->next;
+            delete temp;
+        }
+
+        node *temp= head;
+        temp->income=0;
+        temp->expense=0;
+        temp->date = "-";
+
+
+        cout<<"\nYour History Has Been Delete"<<endl;
+    }
+    void view(string username){
+
+
+
+        node *temp=head;
+        if(head==NULL){
+            cout<<"\n..........You Don't Have History.........."<<endl<<endl;
+        }
+        else{
+
+            cout<<endl<<"|-----------------------------------|" << endl;
+
+            cout<<"|                  "<<"Date"<<"             |" << left << setw(20)<<endl
+                <<"|-----------------------------------|" << endl
+                << left <<setw(2) <<"|"
+                << left << setw(10) <<"Income"
+                << left <<setw(2) <<"|"                                                             // To show the history
+                << left << setw(10) << "Expense"
+                << left << setw(2)<< "|"
+                << left << setw(10) << "Balance"
+                << left << setw(2)<< "|"<<endl
+                <<"|-----------------------------------|" << endl;
+            while(temp!=NULL){
+
+                if(temp->username == username){
+
+                    cout <<"|"<<setw(16)<<""<<setw(19)<<temp->date<<setw(29)<<"|"<<endl;
+                    cout << left <<setw(2) <<"|"
+                         << left << setw(10) << temp->income
+                         << left <<setw(2) <<"|"
+                         << left << setw(10) <<temp->expense
+                         << left << setw(2)<< "|"
+                         << left << setw(10) << temp->balance
+                         << left << setw(2)<< "|"<<endl;
+                    if(temp->category == "Food"){
+                        catAmount[0] += temp->expense ;
+                    }
+                    else if(temp->category == "Transportation"){
+                        catAmount[1] += temp->expense;
+
+                    }
+                    else if(temp->category == "Lifestyle"){
+                        catAmount[2] += temp->expense ;
+
+                    }
+                    else if(temp->category == "Household"){
+                        catAmount[3] += temp->expense ;
+
+                    }
+                    else if(temp->category == "Others"){
+                        catAmount[4] += temp->expense ;
+
+                    }
+                }
+
+                temp=temp->next;
+
+            }
+            cout<<"|------------------------------------------------------------------------------------------------|" << endl
+                << left << setw(2)<< "|"
+                << left << setw(10) << "Food"
+                << left << setw(2)<< "|"
+                << left << setw(15) << "Transportation"
+                << left << setw(2)<< "|"
+                << left << setw(15) << "Lifestyle"
+                << left << setw(2)<< "|"
+                << left << setw(15) << "Household"
+                << left << setw(2)<< "|"
+                << left << setw(15) << "Others"
+                << left << setw(2)<< "|"
+                << left << setw(15) << "Total"
+                << left << setw(2)<< "|"<<endl
+                <<"|------------------------------------------------------------------------------------------------|" << endl;
+            cout<< left << setw(2)<< "|"
+                << left << setw(10) << catAmount[0]
+                << left << setw(2)<< "|"
+                << left << setw(15) << catAmount[1]
+                << left << setw(2)<< "|"
+                << left << setw(15) << catAmount[2]
+                << left << setw(2)<< "|"
+                << left << setw(15) << catAmount[3]
+                << left << setw(2)<< "|"
+                << left << setw(15) << catAmount[4]
+                << left << setw(2)<< "|"
+                << left << setw(15) << catAmount[0]+catAmount[1]+catAmount[2]+catAmount[3]+catAmount[4]
+                << left << setw(2)<< "|" <<endl
+                <<"|------------------------------------------------------------------------------------------------|" << endl;
+        }
+    }
+
+
+};
+#endif //MENCOBAFINAL_LINKEDLIST_H
+
+
+------------------------------------------------------user.h------------------------------------------------------------------
+
+
+
+#ifndef CPPFINAL_USER_H
+#define CPPFINAL_USER_H
+
+
+
+class Hash{
+private:
+
+    static const int tableSize = 5;
+    int totalUser;
+
+    struct User{
+        string username;
+        string password;
+        User * next;
+    };
+
+
+    User * HashTable[tableSize];
+public:
+    string username;
+
+    Hash() {
+        for(int i = 0 ; i < tableSize ; i++)
+        {
+            HashTable[i] = new User;
+            HashTable[i]->username = "empty";
+            HashTable[i]->password = "empty";
+            HashTable[i]->next = nullptr;
+
+        }
+    }
+    int hashing(std::string key) {
+        int hash = 0;
+        int index;
+
+        for (int i = 0 ; i < key.length() ; i++)
+        {
+            hash += (int)key[i];
+
+        }
+
+        index = hash % tableSize;
+        return index;
+
+    }
+
+    bool findUser(string username , string password){
+        int index = hashing(username);
+        bool UserName = false;
+
+        User * Ptr = HashTable[index];
+
+        while(Ptr!=NULL){
+
+            if(Ptr->password == password && Ptr->username == username){
+                UserName = true;
+                return UserName;
+            }
+            Ptr = Ptr->next;
+        }
+        return UserName;
+    }
+
+    void insertLinearProbing(string name, string password) {
+        if(isFull()){
+            cout << "Hash Table is Full !" << endl;
+        } else
+        {
+            int index = hashing(name);
+
+            while (true) {
+                if (HashTable[index]->username == "empty") {
+                    HashTable[index]->username = name;
+                    HashTable[index]->password = password;
+                    break;
+                } else if (HashTable[index]->username == name) {
+                    // if there is a username and the username is same , it will out of the loop
+                    cout << "Item Exists !" << endl;
+                    break;
+                } else {
+                    if (index + 1 > tableSize) {
+                        // kalo udah di ujung indexnya di balikin jadi paling awal
+                        index = 0;
+                    } else {
+                        // coba untuk index berikutnya
+                        index++;
+                    }
+                }
+
+            }
+        }
+    }
+    bool isFull() {
+        int counter = 0;
+        for(int i = 0 ; i < tableSize ; i ++){
+            if(HashTable[i]->username != "empty"){
+                counter ++;
+
+            }
+        }
+        if(counter == tableSize)
+            return true;
+        else
+            return false;
+    }
+    void addUser(string name , string password) {
+        if(findUser(name , password)){
+            cout << "Username or Password has already been Used !" << endl;
+        }
+        else{
+
+            int index = hashing(name);
+
+            if (HashTable[index]->username == "empty") {
+                HashTable[index]->username = name;
+                HashTable[index]->password = password;
+                cout << "User Added" << endl;
+                totalUser ++;
+
+            } else {
+
+                User *temp = HashTable[index];
+                User *ptr = new User;
+
+                ptr->username = name;
+                ptr->password = password;
+                ptr->next = NULL;
+
+                while (temp->next != NULL) {
+                    temp = temp->next;
+                }
+                temp->next = ptr;
+                cout << "User Added" << endl;
+                totalUser ++;
+
+            }
+        }
+    }
+
+
+
+};
+#endif //CPPFINAL_USER_H
