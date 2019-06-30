@@ -1,0 +1,24 @@
+package sample;
+
+import javafx.beans.property.SimpleStringProperty;
+
+public class Album {
+
+    private SimpleStringProperty major,username;
+
+    // TO SEE THE ALBUM IN DATA BASE AS AN OBJECT
+    public Album(String major , String username){
+        this.major = new SimpleStringProperty(major);
+        this.username = new SimpleStringProperty(username);
+
+    }
+    public String getMajor(){
+        return major.get();
+    }
+
+    public String getUsername() {
+        return username.get();
+    }
+
+
+}
