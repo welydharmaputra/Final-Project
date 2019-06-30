@@ -1,0 +1,82 @@
+package sample;
+
+import javafx.fxml.FXML; //this import is used to access the fx:id
+import javafx.fxml.FXMLLoader;  // this import is used to load a new fxml file into the window
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;  // this import is used to set the dimensions
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+public class Controller extends DBConnect implements Initializable {
+
+    @FXML
+    Text validation;
+
+    @FXML
+    TextField usernameField;
+
+    @FXML
+    TextField passwordField;
+
+
+    // THIS FUNCTION WILL FIND USERNAME AND PASSWORD. THEN THIS FUNCTION WILL OPEN TO THE ALBUM PAGE
+   public void login() throws IOException , ClassNotFoundException {
+
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        int counter = 0;
+
+        try {
+            Connection con = DBConnect.getConnection();
+            ResultSet rs = con.createStatement().executeQuery("select * from users");
+            while (rs.next()) {
+
+                if(username.equals(rs.getString("username" )) && password.equals(rs.getString("password"))){
+                    Main.activeUser = username;
+                    Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
+                    Main.primaryStage.setScene(new Scene(root, 600, 400));
+                    counter = 1;
+                }
+            }
+
+        } catch ( SQLException e) {
+            e.printStackTrace();
+        }
+
+        if(counter== 0){
+            validation.setText("Wrong username , or password !");
+        }
+
+
+    }
+    // THIS FUNCTION IS TO OPEN THE REGISTER PAGE
+    public void newAccount() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("signUp.fxml"));
+        Stage signUpstage = new Stage();
+        signUpstage.setScene(new Scene(root, 600, 400));
+        signUpstage.setResizable(false);
+        signUpstage.show();
+    }
+    // THIS FUNCTION IS TO BACK TO LOGIN PAGE FROM REGISTER PAGE
+    public void back() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("test.fxml"));
+        Main.primaryStage.setScene(new Scene(root, 600, 400));
+        Main.primaryStage.setResizable(false);
+        Main.primaryStage.show();
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Main.activeUser ="";
+    }
+}
