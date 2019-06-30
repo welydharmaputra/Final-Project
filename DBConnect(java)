@@ -1,0 +1,114 @@
+package sample;
+
+import javafx.fxml.FXML;
+
+import java.sql.*;
+
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
+
+public class DBConnect {
+    @FXML
+    TextField usernameField;
+    @FXML
+    TextField passwordField;
+    @FXML
+    Text val;
+
+    public Connection con;
+    public Statement st;
+    public ResultSet rs;
+
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/finalproject","root","");
+
+        return connection;
+
+    }
+
+    DBConnect(){
+        try {
+
+            Class.forName("com.mysql.jdbc.Driver");
+            // Create Connection
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/finalproject","root","");
+            //"jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12294102","sql12294102","YrBYNJeaNR"
+            st = con.createStatement();
+        }
+        catch (Exception e){
+            System.out.println("Error : " + e);
+        }
+    }
+    // THIS FUNCTION IS TO INSERT
+    public void signUp(){
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String sql = String.format("insert into users(username,password) VALUES('%s','%s')" , username , password);
+
+        try {
+            st = con.createStatement();
+            st.executeUpdate(sql);
+            System.out.println("Data Inserted");
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        val.setText("REGISTER SUCCESSFUL");
+    }
+    // THIS FUNCTION IS TO CREATE ALBUM AND MAKE THE ALBUM TO BE TABLE IN DATABASE
+    public void addTableAndRow(String major , String username){
+        String table = major+"_"+username;
+        String sql = String.format("CREATE TABLE %s (\n" +
+                "    id int NOT NULL AUTO_INCREMENT,\n" +
+                "    date varchar(255),\n" +
+                "    title varchar(255),\n" +
+                "    notes varchar(255),\n" +
+                "    PRIMARY KEY(id)\n" +
+                ");" , table) ;
+        String ssql = String.format("insert into albums(major , username) VALUES('%s' , '%s')" , major , username);
+
+        try{
+            st = con.createStatement();
+            st.executeUpdate(sql);
+            System.out.println("Table Inserted");
+            st.executeUpdate(ssql);
+            System.out.println("User Registered");
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    // THIS FUNCTION IS TO DELETE THE ALBUM
+    public void deleteRow(String major){
+
+        String sql = String.format("delete from albums where major = '%s' " , major);
+        String sql1 = String.format("DROP TABLE %s " , major);
+
+
+        try {
+            st = con.createStatement();
+            st.executeUpdate(sql);
+            st.executeUpdate(sql1);
+            System.out.println("Row Deleted");
+            System.out.println("Table Deleted");
+        } catch (Exception e){
+            System.out.println(e);
+        }
+    }
+    // THIS FUNCTION IS TO INSERT THE NOTE TO DATABASE
+    public void insertNote(String table , String date , String title){
+        String tables = table +"_"+Main.activeUser;
+        String sql = String.format("insert into %s(date , title , notes) VALUES('%s' , '%s' , '' )" , tables , date , title);
+
+        try{
+            st = con.createStatement();
+            st.executeUpdate(sql);
+            System.out.println("Table Inserted");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
