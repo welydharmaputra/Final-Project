@@ -1,0 +1,29 @@
+package sample;
+
+import javafx.beans.property.SimpleStringProperty;
+
+public class MajorNotes {
+
+
+    private SimpleStringProperty date , title , notes;
+
+    // TO SEE THE NOTE IN DATABASE AS AN OBJECT
+    public MajorNotes(String date , String title , String notes){
+        this.date = new SimpleStringProperty(date);
+        this.title = new SimpleStringProperty(title);
+        this.notes = new SimpleStringProperty(notes);
+
+
+
+    }
+    public String getDate(){
+        return date.get();
+    }
+
+    public String getTitle(){
+        return title.get();
+    }
+    public String getNotes(){
+        return notes.get();
+    }
+}
