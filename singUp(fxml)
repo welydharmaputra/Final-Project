@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="signUpPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <Text layoutX="210.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" wrappingWidth="166.13671875">
+         <font>
+            <Font size="46.0" />
+         </font>
+      </Text>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text layoutX="191.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input Username: " wrappingWidth="98.13671875" />
+      <TextField fx:id="usernameField" layoutX="191.0" layoutY="179.0" prefHeight="25.0" prefWidth="205.0" />
+      <Text layoutX="191.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input Password: " wrappingWidth="98.13671875" />
+      <TextField fx:id="passwordField" layoutX="191.0" layoutY="237.0" prefHeight="25.0" prefWidth="205.0" />
+      <Button layoutX="342.0" layoutY="284.0" mnemonicParsing="false" onAction="#signUp" text="Submit" />
+      <Text fx:id="val" fill="RED" layoutX="226.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Button layoutX="11.0" layoutY="9.0" mnemonicParsing="false" onAction="#back" prefHeight="30.0" prefWidth="60.0" text="Back" textFill="#110000">
+         <font>
+            <Font name="Franklin Gothic Medium" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
