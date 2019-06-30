@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MajorPageController">
+   <children>
+      <TableView fx:id="tableView" layoutY="69.0" prefHeight="290.0" prefWidth="600.0">
+        <columns>
+          <TableColumn fx:id="dateCol" prefWidth="145.0" text="Date" />
+          <TableColumn fx:id="titleCol" prefWidth="454.0" text="Tittle" />
+        </columns>
+      </TableView>
+      <Text fontSmoothingType="LCD" layoutX="225.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Notes" textAlignment="CENTER" wrappingWidth="150.13671875">
+         <font>
+            <Font name="Gadugi" size="57.0" />
+         </font>
+      </Text>
+      <Button onAction="#backToHome" layoutX="1.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Back" textFill="#110000" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <font>
+            <Font name="Franklin Gothic Medium" size="12.0" />
+         </font>
+      </Button>
+      <Text fx:id="majorText" fontSmoothingType="LCD" layoutX="14.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Album Name" wrappingWidth="207.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0" />
+      <Button onAction="#openNote" layoutX="1.0" layoutY="369.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="100.0" text="Open" textFill="#110000" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+         <font>
+            <Font name="Franklin Gothic Medium" size="12.0" />
+         </font>
+      </Button>
+      <Button onAction="#deleteNote" layoutX="546.0" layoutY="369.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Delete" textFill="#110000" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <font>
+            <Font name="Franklin Gothic Medium" size="12.0" />
+         </font>
+      </Button>
+      <Button onAction="#addNote" layoutX="344.0" layoutY="369.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="100.0" text="Add" textFill="#110000" AnchorPane.bottomAnchor="0.0">
+         <font>
+            <Font name="Franklin Gothic Medium" size="12.0" />
+         </font>
+      </Button>
+      <TextField fx:id="titleText" layoutX="181.0" layoutY="369.0" />
+   </children>
+</AnchorPane>
