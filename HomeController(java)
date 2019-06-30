@@ -1,0 +1,97 @@
+package sample;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+public class HomeController extends DBConnect implements Initializable {
+
+    @FXML
+    TextField albumText;
+
+    @FXML
+    private TableView<Album> tableView;
+    @FXML
+    private TableColumn<Album,String> albumColumn;
+
+    ObservableList<Album> albumList = FXCollections.observableArrayList();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Main.major = "";
+        System.out.println(Main.activeUser);
+        loadAlbum();
+    }
+    // Find the Album's data
+    public void loadAlbum() {
+        tableView.getItems().clear();
+        try {
+            Connection con = DBConnect.getConnection();
+            String sql = String.format("select * from albums where username = '%s' ",Main.activeUser);
+            ResultSet rs =  con.createStatement().executeQuery(sql);
+
+            while (rs.next()) {
+                    albumList.add(new Album(rs.getString("major") , Main.activeUser));
+                }
+
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        albumColumn.setCellValueFactory(new PropertyValueFactory<Album, String>("major"));
+
+
+        tableView.setItems(albumList);
+
+    }
+    // adding album's name
+    public void addAlbum(){
+        addTableAndRow(albumText.getText() , Main.activeUser);
+        albumText.setText("");
+        loadAlbum();
+    }
+    // TO GO BACK TO LOGIN PAGE
+    public void logout() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("test.fxml"));
+        Main.primaryStage.setTitle("NOTES");
+        Main.primaryStage.setScene(new Scene(root, 600, 400));
+        Main.primaryStage.setResizable(false);
+        Main.primaryStage.show();
+    }
+    // DELETE ALBUM
+    public void deleteAlbum(){
+        String major = tableView.getSelectionModel().getSelectedItem().getMajor();
+
+        deleteRow(major);
+        tableView.getItems().remove(tableView.getSelectionModel().getSelectedItem());
+    }
+    // GO TO ALBUM PAGE
+    public void goToMajorPage() throws IOException {
+
+        String major = tableView.getSelectionModel().getSelectedItem().getMajor();
+        Main.major = major;
+
+        Parent root = FXMLLoader.load(getClass().getResource("major.fxml"));
+        Main.primaryStage.setTitle("NOTES");
+        Main.primaryStage.setScene(new Scene(root, 600, 400));
+        Main.primaryStage.setResizable(false);
+        Main.primaryStage.show();
+    }
+}
